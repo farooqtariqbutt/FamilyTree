@@ -3,7 +3,20 @@ import { GoogleGenAI } from "@google/genai";
 import type { Person } from '../types.ts';
 import { getFullName } from '../utils/personUtils.ts';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+// By initializing the client lazily (only when needed), we prevent the app from
+// crashing on startup if `process.env` is not available in the browser.
+let ai: GoogleGenAI | null = null;
+const getAiClient = (): GoogleGenAI => {
+    if (!ai) {
+        try {
+            ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+        } catch (e) {
+            console.error("Failed to initialize GoogleGenAI. This is likely due to a missing API_KEY environment variable.", e);
+            throw new Error("GoogleGenAI client could not be initialized. Ensure the API_KEY environment variable is set correctly in your deployment environment.");
+        }
+    }
+    return ai;
+}
 
 interface FamilyContext {
     parents: (Person | undefined)[];
@@ -39,7 +52,8 @@ export const generateLifeStory = async (person: Person, familyContext: FamilyCon
     `;
 
     try {
-        const response = await ai.models.generateContent({
+        const localAi = getAiClient();
+        const response = await localAi.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
         });
@@ -47,7 +61,12 @@ export const generateLifeStory = async (person: Person, familyContext: FamilyCon
         return response.text;
     } catch (error) {
         console.error("Error generating life story with Gemini API:", error);
-        return "An error occurred while generating the life story. Please check the console for more details.";
+        if (error instanceof Error) {
+            if (error.message.includes('API key not valid') || error.message.includes('could not be initialized')) {
+                 return "Could not generate life story. The API Key seems to be invalid or is not configured correctly in your deployment environment. Please verify the `API_KEY` environment variable.";
+            }
+        }
+        return "An error occurred while generating the life story. Please check the browser console for more details.";
     }
 };
 
@@ -67,13 +86,19 @@ export const translateText = async (text: string, targetLanguage: string): Promi
     `;
 
     try {
-        const response = await ai.models.generateContent({
+        const localAi = getAiClient();
+        const response = await localAi.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
         });
         return response.text;
     } catch (error) {
         console.error(`Error translating text to ${targetLanguage} with Gemini API:`, error);
-        return `An error occurred while translating the text. Please check the console for more details.`;
+        if (error instanceof Error) {
+             if (error.message.includes('API key not valid') || error.message.includes('could not be initialized')) {
+                 return `Could not translate text. The API Key seems to be invalid or is not configured correctly in your deployment environment. Please verify the 'API_KEY' environment variable.`;
+            }
+        }
+        return `An error occurred while translating the text. Please check the browser console for more details.`;
     }
 };
