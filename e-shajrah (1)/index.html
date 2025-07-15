@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Family Tree</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'male': 'rgba(59, 130, 246, 0.1)',
+              'male-dark': 'rgba(59, 130, 246, 0.2)',
+              'male-border': 'rgb(59, 130, 246)',
+              'female': 'rgba(236, 72, 153, 0.1)',
+              'female-dark': 'rgba(236, 72, 153, 0.2)',
+              'female-border': 'rgb(236, 72, 153)',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+               spin: {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
+              },
+            },
+            animation: {
+              fadeIn: 'fadeIn 0.5s ease-in-out',
+              spin: 'spin 1s linear infinite',
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Styles for PDF generation will be handled by html2canvas, so @media print is no longer needed */
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.6.3",
+    "uuid": "https://esm.sh/uuid@^11.1.0",
+    "file-saver": "https://esm.sh/file-saver@^2.0.5",
+    "@google/genai": "https://esm.sh/@google/genai@^1.8.0",
+    "react-easy-crop": "https://esm.sh/react-easy-crop@^5.0.7",
+    "jspdf": "https://esm.sh/jspdf@^2.5.1",
+    "html2canvas": "https://esm.sh/html2canvas@^1.4.1",
+    "jspdf-autotable": "https://esm.sh/jspdf-autotable@^3.8.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

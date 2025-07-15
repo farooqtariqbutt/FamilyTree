@@ -1,0 +1,6 @@
+{
+  "name": "e-Shajrah",
+  "description": "An offline-first, privacy-focused application to build, manage, and visualize your family history. Features interactive tree views, detailed personal records, GEDCOM import/export, statistical reports, and AI-powered life story generation.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
